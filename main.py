@@ -1,22 +1,26 @@
-rows = int(input())
-initial = [1, 1]
+import re
 
-if rows>1:
-    print(1)
-    print(*initial)
-    def rowWeWant(initial):
-        lst = []
-        for item in range(len(initial)-1):
-            lst.append(initial[item]+initial[item+1])
-        initial = [1]* (len(lst)+2)
-        initial[0] = 1
-        for i in range(len(lst)):
-            initial[i+1] = lst[i]
-        initial[len(lst)+1] = 1
-        return initial
+def func(initial_text, o):
+    match = re.search('(@[^#]*)#', initial_text[o:])
+    if match:
+        a = match.group(1)
+        r = initial_text[o:].replace(a + '#', a, 1)
+        initial_text = initial_text.replace(initial_text[o:], r, 1)
+    return initial_text
 
-    for row in range(1, rows-1):
-        initial = rowWeWant(initial)
-        print(*initial)
-else:
-    print(1)
+initial_text = input()
+
+e = initial_text.count('@')
+r = 0
+o = 0
+
+while o < len(initial_text):
+    if r < e and initial_text[o] == '@' and bool(re.search('(@[^#]*)#', initial_text)):
+        initial_text = func(initial_text, o)
+        r += 1
+    o += 1
+
+initial_text = initial_text.strip()
+initial_text = re.sub(r'\s+', ' ', initial_text)
+s = re.sub(r'\\n', "\n", initial_text)
+print(f'Formatted Text: {s}')
