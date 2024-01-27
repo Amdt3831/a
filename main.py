@@ -1,4 +1,4 @@
-e = input().split()
+initial_input = input().split()
 a, b = int(e[0]), int(e[1])
 
 def firstnum(a, b):
