@@ -1,43 +1,85 @@
-import numpy as np
-f = open('input1.txt', 'r')
-inp = [line.strip().split(' ') for line in f.readlines()]
-for i in range(1, len(inp)):
-    for j in range(int(inp[0][1])):
-        inp[i][j] = int(inp[i][j])
-inp[0][0] = int(inp[0][0])
-inp[0][1] = int(inp[0][1])
-sets = {}
-y = 1
-for i in range(1, inp[0][0]+1):
-    sets[f'sett{i}'] = list(np.array([]))
-    u = 0
-    while u < inp[0][1]:
-        sets[f'sett{i}'].append(inp[y])
-        y += 1
-        u += 1
-p = 0
-item3 = 0
-item4 = 0
-for item1 in range(1, len(sets) + 1):
-    for item2 in range(item1 + 1, len(sets) + 1):
-        a = np.array(sets[f'sett{item1}'])
-        b = np.array(sets[f'sett{item2}'])
-        c = np.dot(a, b)
-        if np.linalg.det(c) > p:
-            p = np.linalg.det(c)
-            item3 = item1
-            item4 = item2
+import re
 
-t = np.array(sets[f'sett{item3}'])
-y = np.array(sets[f'sett{item4}'])
-if np.linalg.det(t) > np.linalg.det(y):
-    v = np.dot(t, y)
-elif np.linalg.det(t) < np.linalg.det(y):
-    v = np.dot(y, t)
-else:
-    v = np.dot(t, y)
 
-g = np.around(np.linalg.inv(v), decimals=3)
-for item in g:
-    print(*item)
+class Kharchang:
 
+    def __init__(self, stri):
+        self.stri = stri+stri[:10]
+
+    def tt(self):
+        self.stri = re.sub('tt', 'o', self.stri)
+        return self.stri
+
+
+class Spongbob(Kharchang):
+
+    def __init__(self, stri):
+        super().__init__(stri)
+
+    def merge(self, left, right):
+        sorted = []
+        i, j = 0, 0
+        while i < len(left) and j < len(right):
+            if int(left[i]) < int(right[j]):
+                sorted.append(left[i])
+                i += 1
+            else:
+                sorted.append(right[j])
+                j += 1
+
+        sorted += right[j:]
+        sorted += left[i:]
+        return sorted
+
+    # Decomposition
+    def sort(self, arr):
+        # print(arr)
+        if len(arr) > 1:
+            middle = len(arr) // 2
+            left = self.sort(arr[:middle])
+            right = self.sort(arr[middle:])
+            arr = self.merge(left, right)
+            arr = ''.join(arr)
+        return arr
+
+
+class Oktapus:
+
+    def __init__(self, stri):
+        self.stri = stri
+
+    def xindex(self):
+        for s in range(len(self.stri)):
+            if self.stri[s]=='x':
+                self.stri = self.stri + str(s)
+                break
+
+    def eliminate(self):
+        self.stri = re.sub(r'(.)\1\1', '(0_0)', self.stri)
+        return self.stri
+
+
+inp = input()
+def process(inp):
+    global a
+    a = 0
+    if inp[0:2] == 'sb':
+        sb = Spongbob(inp)
+        e = sb.sort(str(len(inp)))
+        r = str(int(e[0])+1) + e[1:]
+        print(r)
+    elif inp[0] == 's' and inp[1] != 'b':
+        ok = Oktapus(inp)
+        ok.xindex()
+        print(ok.eliminate())
+    elif inp[0] == 'm':
+        kh = Kharchang(inp)
+        print(kh.tt())
+    else:
+        a = 1
+
+process(inp)
+if a==1:
+    process(inp[::-1])
+    if a ==1:
+        print('invalid input')
