@@ -1,9 +1,25 @@
-num1 = int(input())
-num2 = int(input())
+e = input().split()
+a, b = int(e[0]), int(e[1])
 
-num3 = num1 ^ num2
-output = 0
-for i in range(len(bin(num3))):
-    if bin(num3)[i] == '1':
-        output += 1
-print(output)
+def firstnum(a, b):
+    numss = []
+    if b >= a:
+        for num in range(a, b + 1):
+            r = 0
+            for num1 in range(1, num + 1):
+                if num % num1 == 0:
+                    r += 1
+            if r == 2:
+                numss.append(1)
+        print('main order - amount:', len(numss))
+    else:
+        for num in range(b, a + 1):
+            r = 0
+            for num1 in range(1, num + 1):
+                if num % num1 == 0:
+                    r += 1
+            if r == 2:
+                numss.append(1)
+        print('reverse order - amount:', len(numss))
+
+firstnum(a, b)
